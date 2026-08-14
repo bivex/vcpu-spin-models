@@ -14,10 +14,10 @@ for model in vcpu_rolling_state.pml vcpu_coroutine_dual.pml vcpu_memory_aliasing
     spin -a "$model"
     
     echo ">>> [2/3] Compiling verifier (pan.c)..."
-    gcc -O2 -w -DSAFETY -DNP pan.c -o pan
+    gcc -O2 -w pan.c -o pan
     
     echo ">>> [3/3] Running formal verification..."
-    ./pan -a -N safe_termination 2>/dev/null || ./pan -a -N liveness 2>/dev/null || ./pan -a -N no_alias_collision 2>/dev/null || ./pan
+    ./pan -a
     
     echo ">>> Result for $model: SUCCESS (0 errors, state space fully explored)"
     rm -f pan pan.* _spin_nvr.tmp

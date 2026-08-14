@@ -1,7 +1,0 @@
-never liveness {    /* !(<> ((vm_running==0))) */
-accept_init:
-T0_init:
-	do
-	:: (! (((vm_running==0)))) -> goto T0_init
-	od;
-}
