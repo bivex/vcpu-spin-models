@@ -1,13 +1,14 @@
 # Formal VCPU Models Resilient to VTIL Deobfuscation (SPIN / Promela)
 
-Данный репозиторий содержит **19 формальных моделей Promela** для верификатора моделей **SPIN**, реализующих математически доказанные архитектурные паттерны VCPU, которые нейтрализуют символьный анализ, снятие SSA-форм, SMT/Z3 солверы и девиртуализацию в **VTIL**, **NoVmp** и динамических эмуляторах.
+Данный репозиторий содержит **20 формальных моделей Promela** для верификатора моделей **SPIN**, реализующих математически доказанные архитектурные паттерны VCPU, которые нейтрализуют символьный анализ, снятие SSA-форм, SMT/Z3 солверы и девиртуализацию в **VTIL**, **NoVmp** и динамических эмуляторах.
 
 ---
 
 ## 📚 Документация в папке `docs/`
 
-* 📖 [**Микроархитектурная оптимизация VCPU под Intel Core i7**](./docs/i7_microarchitecture_optimization.md) — математические формулы задержек L1/L2/L3 MESI шины, взрыв сложности SMT-солвера $N! \cdot 2^{1.5N} \cdot N^3$, результаты исследования пространства состояний SPIN и обоснование оптимального числа $N=4 \dots 8$ VCPU.
-* 🛡️ [**Анализ уязвимостей VTIL и механизмы защиты**](./docs/vtil_vulnerabilities_matrix.md) — детальный разбор исходного кода `VTIL-Core` (`stack_pinning_pass`, `directives.hpp`, `branch_correction_pass`, `dead_code_elimination_pass`, `symbolic_rewrite_pass`) и доказательства сбоев алгоритмов девиртуализации.
+* 📖 [**Микроархитектурная оптимизация под Intel Core i7 (8 ядер)**](./docs/i7_microarchitecture_optimization.md) — анализ задержек шины L3 MESI, Парето-оптимум $N=4 \dots 8$ VCPU, сложность SMT до $10^{11}$.
+* 📖 [**Микроархитектурная оптимизация под Intel Core i3 (4 ядра)**](./docs/i3_microarchitecture_optimization.md) — порог насыщения 4-ядерных CPU, критический оптимум $N=4$ VCPU (235 тактов), анализ троттлинга ОС при $N \ge 5$.
+* 🛡️ [**Анализ уязвимостей VTIL и механизмы защиты**](./docs/vtil_vulnerabilities_matrix.md) — детальный разбор исходного кода `VTIL-Core` (`stack_pinning_pass`, `directives.hpp`, `branch_correction_pass`, `dead_code_elimination_pass`, `symbolic_rewrite_pass`).
 
 ---
 
@@ -15,7 +16,8 @@
 
 | Файл модели | Архитектурный паттерн | Описание защиты |
 | :--- | :--- | :--- |
-| [**`models/i7_multicore_vcpu_optimizer.pml`**](./models/i7_multicore_vcpu_optimizer.pml) | **Intel Core i7 Hardware Emulator** | Параметрическая модель $N$-ядерного VCPU с учётом задержек кэшей L1/L2, MESI-инвалидации L3 и вычисления Парето-оптимума. |
+| [**`models/i3_multicore_vcpu_optimizer.pml`**](./models/i3_multicore_vcpu_optimizer.pml) | **Intel Core i3 Hardware Emulator** | Микроархитектурный эмулятор 4-ядерного процессора с расчётом задержек кэша и точки насыщения $N=4$. |
+| [**`models/i7_multicore_vcpu_optimizer.pml`**](./models/i7_multicore_vcpu_optimizer.pml) | **Intel Core i7 Hardware Emulator** | Параметрическая модель $N$-ядерного VCPU с учётом задержек кэшей L1/L2, MESI-инвалидации L3 и Парето-оптимума. |
 | [**`models/quad_vmprotect.pml`**](./models/quad_vmprotect.pml) | **Quad-VCPU Distributed Ring Pipeline** | 4 изолированных гетерогенных процессора с уникальными перестановками, `OpcodeCryptor` и миграцией по почтовым ящикам. |
 | [**`models/quad_vcpu_mesh.pml`**](./models/quad_vcpu_mesh.pml) | **4-VCPU Asynchronous Pipelined Mesh** | Конвейерная сеть из 4 асинхронных VCPU (Dispatcher $\to$ Crypto $\to$ Memory $\to$ ALU) без монолитного потока управления. |
 | [**`models/vmprotect.pml`**](./models/vmprotect.pml) | **Comprehensive Polymorphic VCPU** | Полная модель VCPU: биективные перестановки регистров, относительный VSP со 128-байтной зоной, `VKey` и Threaded Code. |
@@ -44,12 +46,14 @@ vcpu-spin-models/
 ├── Makefile                # Быстрый запуск сборки и очистки
 ├── README.md               # Главный обзорный документ
 ├── run_verification.sh     # Скрипт автоматизированной SPIN-верификации
-├── docs/                   # Подробная документация
-│   ├── i7_microarchitecture_optimization.md # Исследование i7 и Парето-оптимума
+├── docs/                   # Подробная техническая документация
+│   ├── i3_microarchitecture_optimization.md # Исследование Core i3 (4 ядра)
+│   ├── i7_microarchitecture_optimization.md # Исследование Core i7 (8 ядер)
 │   └── vtil_vulnerabilities_matrix.md       # Анализ уязвимостей и сбоев VTIL
 ├── scripts/
-│   └── find_optimal_vcpu_count.py           # Автоматический поиск оптимального N
-└── models/                 # Каталог формальных моделей Promela
+│   └── find_optimal_vcpu_count.py           # Двойной бенчмарк оптимизации i3/i7
+└── models/                 # Каталог 20 формальных моделей Promela
+    ├── i3_multicore_vcpu_optimizer.pml
     ├── i7_multicore_vcpu_optimizer.pml
     ├── quad_vmprotect.pml
     ├── quad_vcpu_mesh.pml
@@ -59,16 +63,14 @@ vcpu-spin-models/
 
 ---
 
-## 3. Запуск верификации
+## 3. Запуск
 
-### Запуск верификации всех 19 моделей:
+### Запуск верификации всех 20 моделей:
 ```bash
 make verify
-# или
-./run_verification.sh
 ```
 
-### Запуск микроархитектурного оптимизатора i7:
+### Запуск двойного микроархитектурного оптимизатора (Core i3 и Core i7):
 ```bash
 python3 scripts/find_optimal_vcpu_count.py
 ```
