@@ -6,6 +6,7 @@
 
 ## 📚 Документация в папке `docs/`
 
+* 📖 [**Руководство по формальному проектированию VCPU-протектора**](./docs/formal_architecture_design_guide.md) — выбор формальных языков (Sail, Promela, Lean 4, Z3), архитектура двухуровневого изолированного стека $VSP$ и стек технологий 2026 года.
 * 📖 [**Микроархитектурная оптимизация под Intel Core i7 (8 ядер)**](./docs/i7_microarchitecture_optimization.md) — анализ задержек шины L3 MESI, Парето-оптимум $N=4 \dots 8$ VCPU, сложность SMT до $10^{11}$.
 * 📖 [**Микроархитектурная оптимизация под Intel Core i3 (4 ядра)**](./docs/i3_microarchitecture_optimization.md) — порог насыщения 4-ядерных CPU, критический оптимум $N=4$ VCPU (235 тактов), анализ троттлинга ОС при $N \ge 5$.
 * 🛡️ [**Анализ уязвимостей VTIL и механизмы защиты**](./docs/vtil_vulnerabilities_matrix.md) — детальный разбор исходного кода `VTIL-Core` (`stack_pinning_pass`, `directives.hpp`, `branch_correction_pass`, `dead_code_elimination_pass`, `symbolic_rewrite_pass`).
