@@ -1,8 +1,6 @@
 # Formal VCPU Models Resilient to VTIL Deobfuscation (SPIN / Promela)
 
-Данный репозиторий содержит **16 формальных моделей Promela** для верификатора моделей **SPIN**, реализующих математически доказанные архитектурные паттерны VCPU, которые нейтрализуют символьный анализ, снятие SSA-форм, SMT/Z3 солверы и девиртуализацию в **VTIL**, **NoVmp** и динамических эмуляторах.
-
-Включая наиболее полную модель полиморфного VCPU конвейера ([`models/vmprotect.pml`](./models/vmprotect.pml)).
+Данный репозиторий содержит **17 формальных моделей Promela** для верификатора моделей **SPIN**, реализующих математически доказанные архитектурные паттерны VCPU, которые нейтрализуют символьный анализ, снятие SSA-форм, SMT/Z3 солверы и девиртуализацию в **VTIL**, **NoVmp** и динамических эмуляторах.
 
 ---
 
@@ -10,6 +8,7 @@
 
 | Файл модели | Архитектурный паттерн | Почему ломается VTIL / SMT-анализ |
 | :--- | :--- | :--- |
+| [**`models/quad_vcpu_mesh.pml`**](./models/quad_vcpu_mesh.pml) | **4-VCPU Asynchronous Pipelined Mesh** | Конвейерная сеть из 4 асинхронных VCPU (Dispatcher $\to$ Crypto $\to$ Memory $\to$ ALU). У программы отсутствует единый поток и статический CFG. |
 | [**`models/vmprotect.pml`**](./models/vmprotect.pml) | **Comprehensive Polymorphic VCPU Pipeline** | Полная модель VCPU: биективные перестановки регистров, относительный VSP со 128-байтной зоной, скользящий крипто-поток, флаги VFLAGS и прямое ветвление Threaded Code. |
 | [`models/01_rolling_state.pml`](./models/01_rolling_state.pml) | **Rolling Cryptographic State** | Необратимый скользящий ключ $VKey_{n+1} = f(VKey_n, Op)$. Обратный taint-анализ и вычисление адресов упираются в неразрешимое рекуррентное уравнение состояния (Path Explosion). |
 | [`models/02_coroutine_dual.pml`](./models/02_coroutine_dual.pml) | **Interleaved Co-routine Dual VCPU** | Асинхронный конвейер двух VCPU (Master $\leftrightarrow$ Slave) с барьерами синхронизации. VTIL не умеет строить межпоточный граф и ломает Dead Code Elimination. |
@@ -37,6 +36,7 @@ vcpu-spin-models/
 ├── README.md               # Полное руководство и спецификации моделей
 ├── run_verification.sh     # Скрипт автоматизированной SPIN-верификации
 └── models/                 # Каталог формальных моделей Promela
+    ├── quad_vcpu_mesh.pml  # Модель 4-VCPU асинхронной распределенной сети
     ├── vmprotect.pml       # Комплексная модель VCPU
     ├── 01_rolling_state.pml
     ├── 02_coroutine_dual.pml
@@ -59,7 +59,7 @@ vcpu-spin-models/
 
 ## 3. Запуск верификации
 
-Для автоматической проверки всех 16 моделей:
+Для автоматической проверки всех 17 моделей:
 
 ```bash
 make verify
