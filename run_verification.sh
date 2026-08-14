@@ -5,7 +5,7 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$DIR"
 
 echo "================================================================="
-echo "   Formal Verification of 7 VTIL-Resilient VCPU Models (SPIN)   "
+echo "   Formal Verification of 15 VTIL-Resilient VCPU Models (SPIN)   "
 echo "================================================================="
 
 MODELS=(
@@ -17,6 +17,13 @@ MODELS=(
     "vcpu_self_mutating_bytecode.pml"
     "vcpu_homomorphic_risc.pml"
     "vcpu_concurrency_race_predicates.pml"
+    "vcpu_mba_polynomial.pml"
+    "vcpu_exception_dispatch.pml"
+    "vcpu_ephemeral_jit_handlers.pml"
+    "vcpu_timing_entanglement.pml"
+    "vcpu_multipath_superposition.pml"
+    "vcpu_virtual_interrupts.pml"
+    "vcpu_chaffing_ghost_dispatch.pml"
 )
 
 TOTAL=${#MODELS[@]}
@@ -26,7 +33,7 @@ for model in "${MODELS[@]}"; do
     COUNT=$((COUNT + 1))
     echo ""
     echo "[$COUNT/$TOTAL] Verifying model: $model"
-    echo "   -> [1/3] Generating verifier with Spin..."
+    echo "   -> [1/3] Translating model with Spin..."
     spin -a "$model"
     
     echo "   -> [2/3] Compiling optimized model checker (pan.c)..."
@@ -41,5 +48,5 @@ done
 
 echo ""
 echo "================================================================="
-echo "  ALL $TOTAL ADVANCED VCPU MODELS VERIFIED WITH ZERO DEADLOCKS!  "
+echo "  ALL $TOTAL ADVANCED VCPU MODELS VERIFIED WITH ZERO DEADLOCKS! "
 echo "================================================================="
