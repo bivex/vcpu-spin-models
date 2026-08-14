@@ -1,4 +1,7 @@
+# Spin model checker artifacts
 pan
 pan.*
 _spin_nvr.tmp
 *.trail
+models/*.trail
+.spin_build/
