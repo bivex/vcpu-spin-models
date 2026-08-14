@@ -16,7 +16,7 @@
 * **Штраф планировщика ОС (Context Switch Penalty):** Наступает при $N > 8$ (когда число активных виртуальных ядер превышает количество физических Performance-ядер процессора), добавляя $\approx 1500$–$2500$ тактов на переключение потока ОС и вызывая сброс L1/L2 кэшей.
 
 Формула суммарных аппаратных затрат:
-$$T_{\text{exec}}(N) = \left[ N \cdot T_{\text{L1}} + (N - 1) \cdot T_{\text{MESI\_Bounce}} \right] \times \left(1 + 0.04 \cdot N^{1.4}\right) + \text{Penalty}_{\text{OS\_Context\_Switch}}$$
+$$T_{\mathrm{exec}}(N) = \left[ N \cdot T_{\mathrm{L1}} + (N - 1) \cdot T_{\mathrm{MESI}} \right] \times \left(1 + 0.04 \cdot N^{1.4}\right) + P_{\mathrm{switch}}$$
 
 ---
 
