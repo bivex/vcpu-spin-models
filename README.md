@@ -52,6 +52,8 @@ vcpu-spin-models/
 │   └── vtil_vulnerabilities_matrix.md       # Анализ уязвимостей и сбоев VTIL
 ├── scripts/
 │   └── find_optimal_vcpu_count.py           # Двойной бенчмарк оптимизации i3/i7
+├── tools/
+│   └── arksearch/                           # Git-сабмодуль (поиск спецификаций Intel ARK)
 └── models/                 # Каталог 20 формальных моделей Promela
     ├── i3_multicore_vcpu_optimizer.pml
     ├── i7_multicore_vcpu_optimizer.pml
